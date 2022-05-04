@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:focusableInTouchMode="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegistrationActivity"
+    android:background="@color/white">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:gravity="center"
+                android:text="REGISTRATION"
+                android:textColor="@color/darkBlue"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/reg_profileImage"
+                android:layout_width="105dp"
+                android:layout_height="105dp"
+                android:padding="1dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                app:shapeAppearanceOverlay="@style/curved_corners"
+                app:strokeWidth="2dp"
+                android:scaleType="centerCrop"
+                app:strokeColor="@color/black"/>
+
+            <Button
+                android:id="@+id/reg_addImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add profile image"
+                android:gravity="center"
+                android:textColorHighlight="@color/purple_500"
+                android:textColor="@color/black"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginTop="5dp"
+                android:textAllCaps="false"
+                android:clickable="true"
+                android:focusable="true"
+                android:backgroundTint="#F0E8FB"
+                style="?attr/materialButtonOutlinedStyle"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="25dp"
+                android:text="All fields are mandatory."
+                android:textAlignment="textStart"
+                android:textColor="#FF0000" />
+            <TextView
+                android:id="@+id/reg_pwdStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="5dp"
+                android:layout_marginHorizontal="10dp"
+                android:text="Password and confirm password should be same."
+                android:textColor="#FF0000"  />
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/outlinedTextField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="5dp"
+                android:textColorHint="@color/darkBlue"
+                android:theme="@style/outlinedTextField"
+                app:boxStrokeColor="@color/darkBlue"
+                app:hintTextColor="@color/darkBlue">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reg_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Name"
+                    android:inputType="textPersonName"
+                    android:textColor="@color/darkBlue" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="5dp"
+                android:weightSum="2">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="5dp"
+                    android:textColorHint="@color/darkBlue"
+                    android:theme="@style/outlinedTextField"
+                    app:boxStrokeColor="@color/darkBlue"
+                    app:hintTextColor="@color/darkBlue"
+                    app:endIconMode="dropdown_menu"
+                    app:endIconTint="@color/darkBlue"
+                    android:backgroundTint="@color/white"
+                    app:boxBackgroundColor="@color/white">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/gender_menu"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:inputType="none"
+                        android:hint="Gender"
+                        android:textColor="@color/darkBlue"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="5dp"
+                    android:textColorHint="@color/darkBlue"
+                    android:theme="@style/outlinedTextField"
+                    app:boxStrokeColor="@color/darkBlue"
+                    app:hintTextColor="@color/darkBlue"
+                    app:endIconMode="dropdown_menu"
+                    app:endIconTint="@color/darkBlue"
+                    app:boxBackgroundColor="@color/white">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/age_menu"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="none"
+                        android:hint="Age"
+                        android:textColor="@color/darkBlue" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="5dp"
+                android:textColorHint="@color/darkBlue"
+                android:theme="@style/outlinedTextField"
+                app:boxStrokeColor="@color/darkBlue"
+                app:hintTextColor="@color/darkBlue"
+                app:endIconMode="dropdown_menu"
+                app:endIconTint="@color/darkBlue"
+                app:boxBackgroundColor="@color/white">
+
+                <AutoCompleteTextView
+                    android:id="@+id/marital_status_menu"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="none"
+                    android:hint="Marital Status"
+                    android:textColor="@color/darkBlue" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/outlinedTextField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="5dp"
+                android:textColorHint="@color/darkBlue"
+                android:theme="@style/outlinedTextField"
+                app:boxStrokeColor="@color/darkBlue"
+                app:hintTextColor="@color/darkBlue">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reg_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Username/Email"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/darkBlue" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/helper_text"
+                style="@style/outlinedTextField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="5dp"
+                android:textColorHint="@color/darkBlue"
+                android:theme="@style/outlinedTextField"
+                app:boxStrokeColor="@color/darkBlue"
+                app:hintTextColor="@color/darkBlue">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reg_mobile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Mobile Number"
+                    android:ems="10"
+                    android:inputType="phone"
+                    android:textColor="@color/darkBlue"
+                    app:errorEnabled="false" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/mobileError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:text="Mobile number"
+                android:textColor="@color/red"
+                android:visibility="gone"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/outlinedTextField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="5dp"
+                android:textColorHint="@color/darkBlue"
+                android:theme="@style/outlinedTextField"
+                app:boxStrokeColor="@color/darkBlue"
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/darkBlue"
+                app:hintTextColor="@color/darkBlue">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reg_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Password"
+                    android:inputType="textPassword"
+                    android:textColor="@color/darkBlue" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/outlinedTextField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="5dp"
+                android:textColorHint="@color/darkBlue"
+                android:theme="@style/outlinedTextField"
+                app:boxStrokeColor="@color/darkBlue"
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/darkBlue"
+                app:hintTextColor="@color/darkBlue">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reg_cnf_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Confirm Password"
+                    android:inputType="textPassword"
+                    android:textColor="@color/darkBlue" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="25dp"
+                android:background="@drawable/register_btn">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/reg_btnRegistration"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/cardview_default_radius"
+                        android:layout_marginTop="@dimen/cardview_default_radius"
+                        android:layout_marginEnd="@dimen/cardview_default_radius"
+                        android:layout_marginBottom="@dimen/cardview_default_radius"
+                        android:gravity="center"
+                        android:text="REGISTER"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                </RelativeLayout>
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/reg_alreadyRegistered"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/cardview_default_radius"
+                android:layout_marginTop="@dimen/cardview_default_radius"
+                android:layout_marginEnd="@dimen/cardview_default_radius"
+                android:layout_marginBottom="@dimen/cardview_default_radius"
+                android:gravity="center"
+                android:text="Already Registered? Login here"
+                android:textColor="@color/darkBlue"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text=""/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

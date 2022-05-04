@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ReceiverProfileActivity"
+    android:background="@color/white">
+    <TextView
+        android:id="@+id/receiver_s_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="User Profile"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_marginTop="15dp"/>
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/receiver_profileImage"
+        android:layout_width="105dp"
+        android:layout_height="105dp"
+        android:layout_gravity="center"
+        android:padding="1dp"
+        android:layout_marginTop="15dp"
+        app:shapeAppearanceOverlay="@style/curved_corners"
+        app:strokeWidth="2dp"
+        android:scaleType="centerCrop"
+        app:strokeColor="@color/purple_500"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        android:textColor="@color/black"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="25dp"/>
+
+    <TextView
+        android:id="@+id/receiver_name"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:hint="name"
+        android:textSize="20sp"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/black" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/outlinedTextField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textColorHint="@color/darkBlue"
+        android:theme="@style/outlinedTextField"
+        app:boxStrokeColor="@color/darkBlue"
+        app:hintTextColor="@color/darkBlue"
+        android:visibility="gone">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/updateName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter your name"
+            android:inputType="textPersonName"
+            android:textColor="@color/darkBlue" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Email"
+        android:textColor="@color/black"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="15dp"/>
+    <TextView
+        android:id="@+id/receiver_email"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:hint="email"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="10dp"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/outlinedTextField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textColorHint="@color/darkBlue"
+        android:theme="@style/outlinedTextField"
+        app:boxStrokeColor="@color/darkBlue"
+        app:hintTextColor="@color/darkBlue"
+        android:visibility="gone">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/updateEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter your email"
+            android:inputType="textPersonName"
+            android:textColor="@color/darkBlue" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+</LinearLayout>

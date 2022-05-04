@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable-v24/btn_background.xml" value="0.2703125" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable-v24/image_background.xml" value="0.2703125" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable-v24/list_bookmark_icon.xml" value="0.21" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable-v24/list_item_shape.xml" value="0.2703125" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable-v24/sent_background.xml" value="0.1935" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/add_new_user.xml" value="0.2703125" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/back_arrow.xml" value="0.1935" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/back_icon.xml" value="0.1875" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/cursor_color.xml" value="0.2703125" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/delete_icon.xml" value="0.1875" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/favorite_icon_selector.xml" value="0.177" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/gender_array_list.xml" value="0.1875" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/ic_favorite_icon_blank.xml" value="0.21" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/ic_favorite_icon_filled.xml" value="0.177" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/ic_rings.xml" value="0.177" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/ic_ripple.xml" value="0.2703125" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/image_bg.xml" value="0.1935" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/image_btn_bg.xml" value="0.2703125" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/logout_icon.xml" value="0.2703125" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/menu_icon.xml" value="0.2703125" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/message_background.xml" value="0.2703125" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/message_box_background.xml" value="0.2" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/more_dots_vert.xml" value="0.1935" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/phone_call.xml" value="0.1935" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/profile_curve.xml" value="0.21" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/profile_image.xml" value="0.2703125" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/profile_img.xml" value="0.2703125" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/received_background.xml" value="0.2" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/search_icon.xml" value="0.1875" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/send_icon.xml" value="0.2703125" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/send_icon_foreground.xml" value="0.536" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/sent_background.xml" value="0.2703125" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/sent_msgBackground.xml" value="0.2703125" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/settings_icon.xml" value="0.2703125" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/sort_icon.xml" value="0.2055" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/video_call.xml" value="0.1935" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/layout/activity_chat.xml" value="0.264" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/layout/activity_chats.xml" value="0.25416666666666665" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/layout/activity_login.xml" value="0.25416666666666665" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/layout/activity_main.xml" value="0.536" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/layout/activity_receiver_profile.xml" value="0.25416666666666665" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/layout/activity_registration.xml" value="0.264" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/layout/activity_splash.xml" value="0.25416666666666665" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/layout/activity_user_profile.xml" value="0.264" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/layout/dropdown_item.xml" value="0.25416666666666665" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/layout/dropdown_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/layout/gender_array_list.xml" value="0.25416666666666665" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/layout/nav_header.xml" value="0.25416666666666665" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/layout/received_message.xml" value="0.536" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/layout/sent_message.xml" value="0.6" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/layout/user_layout.xml" value="0.4" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/menu/menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/menu/menu_bottom_navigation.xml" value="0.25416666666666665" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/menu/search_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/mipmap-anydpi-v26/send_icon.xml" value="0.176" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/mipmap-anydpi-v26/send_icon_round.xml" value="0.16799999999999998" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/xml/gender_array_list.xml" value="0.25416666666666665" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
