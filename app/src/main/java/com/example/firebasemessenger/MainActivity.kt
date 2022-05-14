@@ -1,39 +1,39 @@
 package com.example.firebasemessenger
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuInflater
 import android.view.View
 import android.widget.*
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_main.*
-import androidx.appcompat.widget.SearchView.OnQueryTextListener
 
 class MainActivity : AppCompatActivity() {
 
-    //private lateinit var toggle: ActionBarDrawerToggle
+
     private lateinit var auth: FirebaseAuth
     private lateinit var userRecyclerView: RecyclerView
     private lateinit var userList: ArrayList<User>
     private lateinit var adapter: UserAdapter
     private lateinit var mDbRef: DatabaseReference
-    lateinit var searchView: SearchView
+    //lateinit var FirebaseRecyclerAdapter : FirebaseRecyclerAdapter<User, UsersViewHolder>
+    lateinit var mSearchText: EditText
 
-
-
+        @SuppressLint("NotifyDataSetChanged")
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_main)
 
-            intent.getStringExtra("Exit")
+            fetch_userStatus.text = getString(R.string.wait)
 
-            var loggedGender = intent.getStringExtra("loggedGender").toString()
+            val loggedGender = intent.getStringExtra("loggedGender").toString()
             supportActionBar?.hide()
 
             auth = FirebaseAuth.getInstance()
@@ -46,89 +46,141 @@ class MainActivity : AppCompatActivity() {
             userRecyclerView.layoutManager = LinearLayoutManager(this)
             userRecyclerView.adapter = adapter
 
-//#############################################################################################################################
-            searchView = findViewById(R.id.searchView)
-            //listView = findViewById(R.id.listView)
+            mSearchText = findViewById<EditText?>(R.id.searchText)
 
-            //var searchAdapter : ArrayAdapter<String> = ArrayAdapter()
+            val swipeRefresh = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
 
-            //searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
-            /*    override fun onQueryTextSubmit(query: String?): Boolean {
-                    if (userList.contains(query)){
-                        searchAdapter.filter.filter(query)
-                    }
-                    return false
+//################################### search user ###########################################################################
+
+            /*mSearchText.addTextChangedListener(object : TextWatcher{
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
                 }
 
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    TODO("Not yet implemented")
-                }
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
-            } )*/
-//############################################################################################################################
-            fetch_userStatus.text = "Please wait, fetching users... "
+                    val searchText = mSearchText.text.toString()
+                    //loadFirebaseData(searchText)
 
+                    mDbRef.child("User").addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
 
-// ###########  logged user's gender  #######################################################################################
-           /* mDbRef.child("User").child(auth.currentUser?.uid!!).get().addOnSuccessListener {
-                    if (it.exists()) {
-                        loggedGender = it.child("gender").value.toString()
-                        Log.d(
-                            "Logged gender: ${loggedGender.toString()},",
-                            "############################"
-                        )
-                    }
-                }*/
+                            userList.clear()
 
-            mDbRef.child("User").addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
+                            for (postSnapshot in snapshot.children) {
+                                val availableUsers = postSnapshot.getValue(User::class.java)
 
-                    userList.clear()
+                                //############## hide current user from list ############################################################
 
-                    for (postSnapshot in snapshot.children) {
-                        val availableUsers = postSnapshot.getValue(User::class.java)
+                                if (auth.currentUser?.uid != availableUsers?.uid &&
+                                    loggedGender != availableUsers?.gender &&
+                                    searchText == availableUsers?.name) {
 
-                        // To hide logged in user
+                                        Log.d(searchText,
+                                            "#########################################################")
 
-                        if (auth.currentUser?.uid != availableUsers?.uid && loggedGender != availableUsers?.gender) {
+                                    userList.add(availableUsers!!)
 
-                            Log.d(
-                                "Logged gender: ${loggedGender.toString()},  ",
-                                "User's gender: ${availableUsers?.gender.toString()}"
-                            )
-
-                            userList.add(availableUsers!!)
-
-                            fetch_userStatus.text = ""
-
+                                    fetch_userStatus.text = ""
+                                }
+                            }
+                            adapter.notifyDataSetChanged()
                         }
+
+                        override fun onCancelled(error: DatabaseError) {
+                        }
+                    })
+
+
+                }
+
+                override fun afterTextChanged(p0: Editable?) {
+
+                }
+
+            })*/
+
+//################################### Show users in "available users" page ###################################################
+
+            swipeRefresh.setOnRefreshListener {
+                swipeRefresh.isRefreshing = true
+
+                getAvailableUsers(loggedGender)
+
+                adapter.notifyDataSetChanged()
+                swipeRefresh.isRefreshing = false
+            }
+
+            getAvailableUsers(loggedGender)
+
+//################################### Bottom navigation bar ##################################################################
+
+            homeBtn.setOnClickListener {
+
+                finish()
+                startActivity(intent)
+
+            /*mDbRef.child("User").child(auth.currentUser?.uid!!).get().addOnSuccessListener{
+                    if (it.exists()){
+                        val loggedGender = it.child("gender").value.toString()
+
+                        var i = Intent(this, MainActivity::class.java)
+                            i.putExtra("loggedGender", loggedGender)
+                            startActivity(i)
+                            finish()
                     }
-                    adapter.notifyDataSetChanged()
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                }
-            })
-
-            main_backButton.setOnClickListener {
-                val i = Intent(this, Chats::class.java)
-                i.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                startActivity(i)
+                }.addOnFailureListener {
+                    startActivity(Intent(this, LoginActivity::class.java))
+                    finish()
+                }*/
             }
 
-            favorite.setOnClickListener {
-                Toast.makeText(this, loggedGender, Toast.LENGTH_LONG).show()
-                //startActivity(Intent(this, Chats::class.java))
+            favoriteBtn.setOnClickListener {
+                finishAfterTransition()
+                startActivity(Intent(this, FavoriteChats::class.java))
             }
 
-            settingsButton.setOnClickListener {
+            profileBtn.setOnClickListener {
                 startActivity(Intent(this, UserProfile::class.java))
+            }
+
+            main_searchButton.setOnClickListener {
+                searchBarLayout.visibility = View.VISIBLE
+                main_searchButton.setBackgroundResource(R.drawable.ic_cancel_icon)
             }
 
         }
 
-        //############################################# SORT LIST ##################################################################
-        fun showPopup(v: View) {
+    private fun getAvailableUsers(loggedGender: String) {
+        mDbRef.child("User").addValueEventListener(object : ValueEventListener {
+            @SuppressLint("NotifyDataSetChanged")
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                userList.clear()
+
+                for (postSnapshot in snapshot.children) {
+                    val availableUsers = postSnapshot.getValue(User::class.java)
+
+//################################### hide current user from list ############################################################
+
+                    if (auth.currentUser?.uid != availableUsers?.uid && loggedGender != availableUsers?.gender) {
+
+                        userList.add(availableUsers!!)
+
+                        fetch_userStatus.text = ""
+                    }
+                }
+                adapter.notifyDataSetChanged()
+            }
+
+            override fun onCancelled(error: DatabaseError) { }
+        })
+    }
+
+//############################################# SORT LIST ###################################################################
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun showPopup(v: View) {
             val popup = PopupMenu(this, v)
             val inflater: MenuInflater = popup.menuInflater
             inflater.inflate(R.menu.menu, popup.menu)
@@ -163,4 +215,41 @@ class MainActivity : AppCompatActivity() {
             }
             popup.show()
         }
+
+//#############################################  ###################################################################
+
+    /*private fun loadFirebaseData(searchText: String) {
+
+        if (searchText.isEmpty()){
+
+            FirebaseRecyclerAdapter.cleanup()
+            userRecyclerView.adapter = FirebaseRecyclerAdapter
+
+        }else{
+
+            FirebaseRecyclerAdapter = object : FirebaseRecyclerAdapter<User , UsersViewHolder>(
+                User::class.java,
+                R.layout.user_layout,
+                UsersViewHolder::class.java,
+                mDbRef
+            ){
+                override fun populateViewHolder(viewHolder: UsersViewHolder, userModel: User?, position: Int) {
+                    viewHolder.mView.txt_name.text = userModel?.name
+                    viewHolder.mView.txt_age.text = userModel?.age
+                    viewHolder.mView.txt_gender.text = userModel?.gender
+                    Picasso.get().load(userModel?.profileImageUri).into(viewHolder.mView.chat_imageView)
+
+                }
+
+            }
+
+            userRecyclerView.adapter = FirebaseRecyclerAdapter
+        }
+
     }
+
+    class UsersViewHolder(var mView : View) : RecyclerView.ViewHolder(mView){
+
+    }*/
+
+}

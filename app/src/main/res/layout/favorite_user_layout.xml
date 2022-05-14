@@ -16,7 +16,7 @@
         android:padding="5dp">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/chat_imageView"
+            android:id="@+id/favorite_imageView"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginStart="5dp"
@@ -29,51 +29,51 @@
             app:strokeWidth="1dp" />
 
         <TextView
-            android:id="@+id/txt_name"
+            android:id="@+id/favorite_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="7dp"
-            android:layout_toStartOf="@id/favourite"
-            android:layout_toEndOf="@+id/chat_imageView"
+            android:layout_toStartOf="@id/favourite_remove"
+            android:layout_toEndOf="@+id/favorite_imageView"
             android:text="First Last"
             android:textColor="@color/black"
             android:textSize="17sp"
             android:textStyle="bold" />
 
         <ImageView
-            android:id="@+id/favourite"
+            android:id="@+id/favourite_remove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="7dp"
             android:layout_marginEnd="10dp"
-            android:background="@drawable/ic_favorite_icon_blank"
-            android:contentDescription="favorite" />
+            android:background="@drawable/ic_remove_icon"
+            android:contentDescription="favorite remove" />
 
         <TextView
-            android:id="@+id/txt_age"
+            android:id="@+id/favorite_age"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_name"
+            android:layout_below="@+id/favorite_name"
             android:layout_marginStart="10dp"
             android:layout_marginTop="7dp"
             android:layout_marginEnd="18dp"
-            android:layout_toEndOf="@+id/chat_imageView"
+            android:layout_toEndOf="@+id/favorite_imageView"
             android:text="24 Yrs."
             android:textColor="@color/black"
             android:textSize="14sp"
             android:textStyle="normal" />
 
         <TextView
-            android:id="@+id/txt_gender"
+            android:id="@+id/favorite_gender"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_name"
+            android:layout_below="@+id/favorite_name"
             android:layout_marginStart="10dp"
             android:layout_marginTop="7dp"
             android:layout_marginEnd="18dp"
-            android:layout_toEndOf="@+id/txt_age"
+            android:layout_toEndOf="@+id/favorite_age"
             android:text="Male"
             android:textColor="@color/black"
             android:textSize="14sp"

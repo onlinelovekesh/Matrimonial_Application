@@ -2,6 +2,7 @@ package com.example.firebasemessenger
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
@@ -23,27 +24,26 @@ class LoginActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         val loggedGender = intent.getStringExtra("loggedGender").toString()
-        Toast.makeText(this, loggedGender, Toast.LENGTH_SHORT).show()
 
         auth = FirebaseAuth.getInstance()
         val user = Firebase.auth.currentUser
-        if (user != null) {
+
+        /*if (user != null) {
             val i = Intent(this, MainActivity::class.java)
             i.putExtra("loggedGender", loggedGender)
             startActivity(i)
             finish()
             user.let {
-                // Name, email address, and profile photo Url
-                //val name = user.displayName
-                val email = user.email
 
+                val email = user.email
                 Toast.makeText(this, "Welcome Back... $email", Toast.LENGTH_SHORT).show()
 
             }
-        } else {
+        }
+        else {*/
             log_btnLogin.setOnClickListener {
-                var email = findViewById<TextView>(R.id.log_email).text.toString()
-                var password = findViewById<TextView>(R.id.log_password).text.toString()
+                val email = findViewById<TextView>(R.id.log_email).text.toString()
+                val password = findViewById<TextView>(R.id.log_password).text.toString()
 
                 when {
                     email.isEmpty() -> Toast.makeText(this,"Please enter your Email",Toast.LENGTH_SHORT).show()
@@ -52,13 +52,14 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
 
-        }
+        /*}*/
 
-        forgot_pwd.setOnClickListener {
+        log_forgotPassword.setOnClickListener {
             getPassword()
         }
 
-        log_newUser.setOnClickListener {
+        log_registerHereLink.setOnClickListener {
+            log_registerHereLink.setTextColor(Color.RED)
             startActivity(Intent(this, RegistrationActivity::class.java))
             finish()
         }
@@ -66,7 +67,7 @@ class LoginActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun getPassword() {
-        var email = findViewById<TextView>(R.id.log_email).text.toString()
+        val email = findViewById<TextView>(R.id.log_email).text.toString()
         if (email.isEmpty()){
 
             Toast.makeText(this, "Please enter email address", Toast.LENGTH_SHORT).show()
@@ -74,7 +75,7 @@ class LoginActivity : AppCompatActivity() {
         }
         else {
             auth.sendPasswordResetEmail(log_email.text.toString()).addOnSuccessListener {
-                emailSent_status.text = "An email with password reset link has been sent to your registered email successfully."
+                log_emailSentStatus.text = "An email with password reset link has been sent to your registered email successfully."
             }
         }
     }
@@ -84,8 +85,10 @@ class LoginActivity : AppCompatActivity() {
             if (it.isSuccessful) {
                 Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
                 val loggedGender = intent.getStringExtra("Gender").toString()
-                val i = Intent(this, MainActivity::class.java)
-                i.putExtra("loggedGender",loggedGender)
+
+//########################################################################################################################################
+                val i = Intent(this, SplashActivity::class.java)
+                //i.putExtra("loggedGender",loggedGender)
                 startActivity(i)
 
                 finish()

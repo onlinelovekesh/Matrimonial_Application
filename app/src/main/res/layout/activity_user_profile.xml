@@ -9,7 +9,7 @@
     android:background="@color/purple_500">
 
     <LinearLayout
-        android:id="@+id/main_actionBar"
+        android:id="@+id/profile_actionBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -17,7 +17,7 @@
         android:layout_marginHorizontal="5dp">
 
         <ImageButton
-            android:id="@+id/user_backButton"
+            android:id="@+id/profile_backButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -35,7 +35,7 @@
             android:gravity="center"
             android:layout_marginTop="15dp"/>
         <ImageButton
-            android:id="@+id/logoutButton"
+            android:id="@+id/profile_logoutButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -76,7 +76,7 @@
                     app:strokeColor="@color/purple_500"/>
 
                 <Button
-                    android:id="@+id/selectOrUpdatePhoto"
+                    android:id="@+id/profile_selectOrUpdatePhoto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Update Profile Picture"
@@ -130,7 +130,7 @@
                     android:visibility="gone">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/updateName"
+                        android:id="@+id/profile_updateName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Enter your name"
@@ -299,7 +299,7 @@
                     android:layout_marginHorizontal="15dp"/>
 
                 <Button
-                    android:id="@+id/btn_deleteAccount"
+                    android:id="@+id/profile_btnDeleteAccount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Delete Account"

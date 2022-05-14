@@ -42,7 +42,7 @@
                 android:id="@+id/reg_addImage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Add profile image"
+                android:text="Upload image"
                 android:gravity="center"
                 android:textColorHighlight="@color/purple_500"
                 android:textColor="@color/black"
@@ -115,7 +115,7 @@
                     app:boxBackgroundColor="@color/white">
 
                     <AutoCompleteTextView
-                        android:id="@+id/gender_menu"
+                        android:id="@+id/reg_genderMenu"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -140,7 +140,7 @@
                     app:boxBackgroundColor="@color/white">
 
                     <AutoCompleteTextView
-                        android:id="@+id/age_menu"
+                        android:id="@+id/reg_ageMenu"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:inputType="none"
@@ -166,7 +166,7 @@
                 app:boxBackgroundColor="@color/white">
 
                 <AutoCompleteTextView
-                    android:id="@+id/marital_status_menu"
+                    android:id="@+id/reg_maritalStatusMenu"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="none"
@@ -196,7 +196,6 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/helper_text"
                 style="@style/outlinedTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -215,17 +214,8 @@
                     android:ems="10"
                     android:inputType="phone"
                     android:textColor="@color/darkBlue"
-                    app:errorEnabled="false" />
+                    android:maxLength="10"/>
             </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:id="@+id/mobileError"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:text="Mobile number"
-                android:textColor="@color/red"
-                android:visibility="gone"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/outlinedTextField"
@@ -263,7 +253,7 @@
                 app:hintTextColor="@color/darkBlue">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/reg_cnf_password"
+                    android:id="@+id/reg_confirmPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Confirm Password"
@@ -302,7 +292,7 @@
             </FrameLayout>
 
             <TextView
-                android:id="@+id/reg_alreadyRegistered"
+                android:id="@+id/reg_loginHereLink"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/cardview_default_radius"

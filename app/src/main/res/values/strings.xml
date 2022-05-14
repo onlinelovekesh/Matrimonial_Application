@@ -2,7 +2,6 @@
     <string-array name="gender">
         <item>Male</item>
         <item>Female</item>
-        <item>Others</item>
     </string-array>
 
     <string-array name="age">
@@ -33,4 +32,5 @@
         <item>Divorced</item>
     </string-array>
 
+    <string name="wait">Please wait, fetching users… </string>
 </resources>

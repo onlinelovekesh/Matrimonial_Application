@@ -2,15 +2,21 @@ package com.example.firebasemessenger
 
 import android.app.Activity
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.*
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
@@ -18,7 +24,9 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.activity_registration.*
+import kotlinx.android.synthetic.main.activity_splash.*
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import java.io.File
 
@@ -29,6 +37,7 @@ class UserProfile : AppCompatActivity() {
     private lateinit var storageReference: StorageReference
 
     private lateinit var imageUri: Uri
+    //private lateinit var cropActivityResultLauncher: ActivityResultLauncher<Any?>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +50,9 @@ class UserProfile : AppCompatActivity() {
         mDbRef = FirebaseDatabase.getInstance().reference
         storageReference = FirebaseStorage.getInstance().reference
 
-        val selectOrUpdate = findViewById<Button>(R.id.selectOrUpdatePhoto)
+        val selectOrUpdate = findViewById<Button>(R.id.profile_selectOrUpdatePhoto)
+
+//########################### Getting user details ###################################################################
 
         mDbRef.child("User").child(auth.currentUser?.uid!!).get()
             .addOnSuccessListener {
@@ -67,27 +78,36 @@ class UserProfile : AppCompatActivity() {
         val localFile = File.createTempFile("tempImage",".jpg")
         Toast.makeText(this,"Loading image",Toast.LENGTH_SHORT).show()
         imageRef.getFile(localFile).addOnSuccessListener {
+
             val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
             profile_image.setImageBitmap(bitmap)
-
-
         }.addOnFailureListener {
             Toast.makeText(this,"Unable to retrieve image",Toast.LENGTH_SHORT).show()
         }
 
+        /*cropActivityResultLauncher = registerForActivityResult(cropActivity){
+            it?.let {imageUri ->
+                profile_image.setImageURI(imageUri)
+
+            }
+        }*/
+
+//############################# Buttons ##############################################################################
         selectOrUpdate.setOnClickListener {
             if (selectOrUpdate.text == "Update Profile Picture"){
+                //cropActivityResultLauncher.launch(null)
                 startFileChooser()
             }else{
+
                 uploadPhoto()
 
             }
         }
 
-        btn_deleteAccount.setOnClickListener {
+        profile_btnDeleteAccount.setOnClickListener {
             var ad = AlertDialog.Builder(this)
             ad.setTitle("Delete Account")
-            ad.setMessage("On clicking delete button, all data will be deleted.")
+            ad.setMessage("On clicking delete button, all data including chats will be deleted. It can not be recovered later.")
             ad.setPositiveButton("Delete", DialogInterface.OnClickListener { _, _ ->
 
                 deleteUser()
@@ -98,13 +118,12 @@ class UserProfile : AppCompatActivity() {
 
         }
 
-        user_backButton.setOnClickListener {
-            val i = Intent(this,MainActivity::class.java)
-            i.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(i)
+        profile_backButton.setOnClickListener {
+            onBackPressed() // go back to previous page(main activity)
+
         }
 
-        logoutButton.setOnClickListener{
+        profile_logoutButton.setOnClickListener{
             auth.signOut()
             val i = Intent(this,LoginActivity::class.java)
             i.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -112,6 +131,22 @@ class UserProfile : AppCompatActivity() {
         }
 
     }
+
+    /*private val cropActivity = object : ActivityResultContract<Any?, Uri?>(){
+        override fun createIntent(context: Context, input: Any?): Intent {
+            return CropImage.activity()
+                .setAspectRatio(16,16)
+                .getIntent(this@UserProfile)
+        }
+
+        override fun parseResult(resultCode: Int, intent: Intent?): Uri? {
+
+            imageUri = intent?.data!!
+
+            return CropImage.getActivityResult(intent)?.uri
+        }
+
+    }*/
 
     private fun startFileChooser() {
         val i = Intent()
@@ -126,8 +161,12 @@ class UserProfile : AppCompatActivity() {
         if (requestCode == 111 && resultCode == Activity.RESULT_OK && data != null){
             imageUri = data.data!!
             val bitmap = MediaStore.Images.Media.getBitmap(contentResolver,imageUri)
+
+            //cropActivityResultLauncher.launch(null)
+
             profile_image.setImageBitmap(bitmap)
-            selectOrUpdatePhoto.text = "Save New Image"
+
+            profile_selectOrUpdatePhoto.text = "Save New Image"
         }
     }
 
@@ -138,13 +177,13 @@ class UserProfile : AppCompatActivity() {
             pd.setTitle("Uploading image")
             pd.show()
 
-            //var fileName = UUID.randomUUID().toString() //optional
             val imageRef = FirebaseStorage.getInstance().reference
-                .child("Users").child(auth.currentUser?.uid!!).child("profileImage")//.child(fileName)
+                .child("Users").child(auth.currentUser?.uid!!).child("profileImage")
             imageRef.putFile(imageUri)
                 .addOnSuccessListener {p0 ->
                     pd.dismiss()
-                    selectOrUpdatePhoto.text = "Update Profile Picture"
+
+                    profile_selectOrUpdatePhoto.text = "Update Profile Picture"
                     Toast.makeText(this, "Image updated successfully", Toast.LENGTH_LONG).show()
 
                     //getting path of the image after inserting
@@ -172,14 +211,6 @@ class UserProfile : AppCompatActivity() {
         }
     }
 
-    //private fun addUserToDatabase(profileImageUri: String) {
-    //}
-/*
-    var user = Firebase.auth.currentUser
-    auth = FirebaseAuth.getInstance()
-    mDbRef = FirebaseDatabase.getInstance().reference
-    storageReference = FirebaseStorage.getInstance().reference
-*/
     private fun deleteUser() {
 
         //########## delete user profile image/user data from firebase storage ###############################################
@@ -204,5 +235,6 @@ class UserProfile : AppCompatActivity() {
                 Toast.makeText(this, "Error occurred, Please try again after few minutes", Toast.LENGTH_SHORT).show()
             }
     }
+
 
 }

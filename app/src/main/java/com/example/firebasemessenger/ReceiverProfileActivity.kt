@@ -19,7 +19,6 @@ class ReceiverProfileActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var mDbRef: DatabaseReference
     private lateinit var storageReference: StorageReference
-    private lateinit var imageUri: Uri
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,16 +44,13 @@ class ReceiverProfileActivity : AppCompatActivity() {
 
                 }
             }
-        //var authen = auth.currentUser?.uid!!
-        //var imgName = "profileImage"
+
         val imageRef = storageReference.child("Users").child(receiverUid).child("profileImage")
         val localFile = File.createTempFile("tempImage",".jpg")
         Toast.makeText(this,"Loading image", Toast.LENGTH_SHORT).show()
         imageRef.getFile(localFile).addOnSuccessListener {
             val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
             receiver_profileImage.setImageBitmap(bitmap)
-
-
         }.addOnFailureListener {
             Toast.makeText(this,"Unable to retrieve image", Toast.LENGTH_SHORT).show()
         }

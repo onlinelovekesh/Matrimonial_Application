@@ -3,8 +3,7 @@
 
     <item
         android:drawable="@drawable/ic_favorite_icon_blank"
-        android:state_checked="false"
-        />
+        android:state_checked="false" />
     <item
         android:drawable="@drawable/ic_favorite_icon_filled"
         android:state_checked="true"/>

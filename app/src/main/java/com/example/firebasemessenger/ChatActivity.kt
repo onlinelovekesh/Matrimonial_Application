@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_chat.*
@@ -30,7 +29,6 @@ class ChatActivity : AppCompatActivity() {
 
     //var senderRoom: String? = null
     //var receiverRoom: String? = null
-
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,102 +48,142 @@ class ChatActivity : AppCompatActivity() {
 
         // custom actionbar name
         chat_userName.text = name
-        // custom actionbar back button
-        chat_backButton.setOnClickListener {
-            val i = Intent(this, MainActivity::class.java)
-            i.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(i)
-        }
 
-        // custom actionbar profile image
-        val profileImageRef =
-            storageReference.child("Users").child(receiverUid!!).child("profileImage")
+//########################### display profile image from database storage ################################################
+
+        val profileImageRef = storageReference.child("Users").child(receiverUid!!).child("profileImage")
         val localFile = File.createTempFile("tempImage", ".jpg")
-        Toast.makeText(this, "Loading image", Toast.LENGTH_SHORT).show()
+
         profileImageRef.getFile(localFile).addOnSuccessListener {
             val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
             chat_profileImage.setImageBitmap(bitmap)
+        }
 
-            chat_profileImage.setOnClickListener {
-                val i = Intent(this, ReceiverProfileActivity::class.java)
-                i.putExtra("uid",receiverUid)
-                startActivity(i)
+        val chatRecyclerView = findViewById<RecyclerView>(R.id.chat_recyclerView)
+        val messageBox = findViewById<EditText>(R.id.chat_messageBox)
+        val sendButton = findViewById<ImageView>(R.id.chat_sendButton)
+        messageList = ArrayList()
+        messageAdapter = MessageAdapter(this, messageList, senderUid!!, receiverUid)
+
+        chatRecyclerView.layoutManager = LinearLayoutManager(this)
+        chatRecyclerView.adapter = messageAdapter
+
+//######################## adding messages in recyclerView ################################################################
+
+        myDbRef.child("chats").child(senderRoom).child("messages")
+            .addChildEventListener(object : ChildEventListener{
+
+                @SuppressLint("NotifyDataSetChanged")
+                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                    val message = snapshot.getValue(Message::class.java)
+                    if (message != null ){
+
+                        messageList.add(message)
+
+                    }
+                    chatRecyclerView.scrollToPosition(messageAdapter.itemCount -1)
+                    messageAdapter.notifyDataSetChanged()
+                }
+
+                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) { }
+
+                override fun onChildRemoved(snapshot: DataSnapshot) {
+                    val messageKey = snapshot.key
+                }
+
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) { }
+                override fun onCancelled(error: DatabaseError) { }
+
+            })
+
+        /*myDbRef.child("chats").child(senderRoom).child("messages")
+            .addValueEventListener(object : ValueEventListener {
+
+                @SuppressLint("NotifyDataSetChanged")
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    messageList.clear()
+
+                    for (postSnapshot in snapshot.children) {
+                        val message = postSnapshot.getValue(Message::class.java)
+                        messageList.add(message!!)
+                        chatRecyclerView.smoothScrollToPosition(messageAdapter.itemCount -1)
+                        //chatRecyclerView.smoothScrollToPosition(messageAdapter.itemCount -1)//chatRecyclerView.bottom)
+
+                    }
+                    //chatRecyclerView.smoothScrollToPosition(messageAdapter.itemCount -1)//chatRecyclerView.bottom)
+                    messageAdapter.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(error: DatabaseError) {  }
+
+            })*/
+
+//########################### add new message to database ##############################################################
+
+        sendButton.setOnClickListener {
+
+            val messageText = messageBox.text.toString()
+
+            if (messageText != "") {
+                addNewMessageToDatabase(senderRoom, receiverRoom, messageText, senderUid, receiverUid, messageBox)
             }
-            chat_userName.setOnClickListener {
-                val i = Intent(this, ReceiverProfileActivity::class.java)
-                i.putExtra("uid",receiverUid)
-                startActivity(i)
-            }
+        }
 
+//############################ BUTTONS #################################################################################
+        chat_backButton.setOnClickListener {
+            onBackPressed()
+        }
 
-            var chatRecyclerView = findViewById<RecyclerView>(R.id.chatRecyclerView)
-            var messageBox = findViewById<EditText>(R.id.messageBox)
-            var sendButton = findViewById<ImageView>(R.id.sendButton)
-            messageList = ArrayList()
-            messageAdapter = MessageAdapter(this, messageList, senderUid!!, receiverUid)
+        chat_profileImage.setOnClickListener {
+            val i = Intent(this, ReceiverProfileActivity::class.java)
+            i.putExtra("uid",receiverUid)
+            startActivity(i)
+        }
 
-            chatRecyclerView.layoutManager = LinearLayoutManager(this)
-            chatRecyclerView.adapter = messageAdapter
+        chat_userName.setOnClickListener {
+            val i = Intent(this, ReceiverProfileActivity::class.java)
+            i.putExtra("uid",receiverUid)
+            startActivity(i)
+        }
 
-            // adding data to recyclerView
-            myDbRef.child("chats").child(senderRoom).child("messages")
-                .addValueEventListener(object : ValueEventListener {
+//########################### delete chat from database ################################################################
 
-                    @SuppressLint("NotifyDataSetChanged")
-                    override fun onDataChange(snapshot: DataSnapshot) {
+        chat_delete.setOnClickListener {
 
-                        messageList.clear()
+            val ad = AlertDialog.Builder(this)
+            ad.setTitle("Delete")
+            ad.setMessage("Do you want to delete all chat messages ?")
+            ad.setPositiveButton("Yes", DialogInterface.OnClickListener { _, _ ->
 
-                        for (postSnapshot in snapshot.children) {
-                            val message = postSnapshot.getValue(Message::class.java)
-                            messageList.add(message!!)
-
-
-                        }
-                        messageAdapter.notifyDataSetChanged()
+                myDbRef.child("chats").child(receiverUid + senderUid).child("messages")
+                    .removeValue().addOnSuccessListener {
+                        Toast.makeText(this, "Chat Deleted", Toast.LENGTH_SHORT).show()
+                    }.addOnFailureListener {
+                        Toast.makeText(this, "Try Again", Toast.LENGTH_SHORT).show()
                     }
 
-                    override fun onCancelled(error: DatabaseError) {  }
-
-                })
-
-
-            //adding message to database
-            sendButton.setOnClickListener {
-                val message = messageBox.text.toString()
-                var messageObject = Message(message, senderUid,System.currentTimeMillis())
-
-                if (message != "") {
-                    //myDbRef.child("chats").child(senderUid!!).child(message).child().push()
-                    myDbRef.child("chats").child(senderRoom!!).child("messages").push()
-                        .setValue(messageObject).addOnSuccessListener {
-                            myDbRef.child("chats").child(receiverRoom!!).child("messages").push()
-                                .setValue(messageObject)
-                        }
-                    messageBox.setText("")
-                }
-            }
-            chat_delete.setOnClickListener {
-
-                var ad = AlertDialog.Builder(this)
-                ad.setTitle("Delete")
-                ad.setMessage("Do you want to delete all chat messages ?")
-                ad.setPositiveButton("Yes", DialogInterface.OnClickListener { _, _ ->
-
-                    myDbRef.child("chats").child(receiverUid + senderUid).child("messages")
-                        .removeValue().addOnSuccessListener {
-                            Toast.makeText(this, "Chat Deleted", Toast.LENGTH_SHORT).show()
-                        }.addOnFailureListener {
-                            Toast.makeText(this, "Try Again", Toast.LENGTH_SHORT).show()
-                        }
-
-                })
-                ad.setNegativeButton("No",null)
-                ad.show()
-
-            }
+            })
+            ad.setNegativeButton("No",null)
+            ad.show()
 
         }
+    }
+
+    private fun addNewMessageToDatabase(senderRoom: String, receiverRoom: String, messageText: String, senderUid: String,
+        receiverUid: String, messageBox: EditText) {
+
+        val senderMessage = myDbRef.child("chats").child(senderRoom).child("messages").push()
+        val senderMessageObject = Message(senderMessage.key,messageText, senderUid,System.currentTimeMillis())
+
+        val receiverMessage = myDbRef.child("chats").child(receiverRoom).child("messages").push()
+        val receiverMessageObject = Message(receiverMessage.key,messageText, receiverUid,System.currentTimeMillis())
+
+        //myDbRef.child("chats").child(senderRoom).child("messages").push()
+        senderMessage.setValue(senderMessageObject).addOnSuccessListener {
+            receiverMessage.setValue(receiverMessageObject)
+        }
+        messageBox.setText("")
     }
 }
 

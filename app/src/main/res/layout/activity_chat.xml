@@ -14,7 +14,7 @@
         android:layout_alignParentTop="true"
         android:background="@color/purple_500"
         android:orientation="horizontal"
-        android:weightSum="10">
+        android:weightSum="5">
 
         <ImageView
             android:id="@+id/chat_backButton"
@@ -47,26 +47,17 @@
             android:layout_height="wrap_content"
             android:layout_marginVertical="13dp"
             android:layout_marginStart="5dp"
-            android:layout_weight="7"
+            android:layout_weight="4.5"
             android:textColor="@color/white"
             android:textSize="20sp" />
 
-        <ImageButton
-            android:id="@+id/chat_phoneCall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="13dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/phone_call"
-            android:visibility="invisible"/>
 
         <ImageButton
             android:id="@+id/chat_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="13dp"
-            android:layout_weight="1"
+            android:layout_weight="0.25"
             android:background="@android:color/transparent"
             android:src="@drawable/delete_icon" />
 
@@ -75,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="13dp"
-            android:layout_weight="1"
+            android:layout_weight="0.25"
             android:background="@android:color/transparent"
             android:src="@drawable/more_dots_vert" />
 
@@ -83,15 +74,15 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chatRecyclerView"
+        android:id="@+id/chat_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/linearLayout"
+        android:layout_above="@id/chat_linearLayout"
         android:layout_below="@id/chat_actionBar"
         android:layout_marginBottom="5dp" />
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/chat_linearLayout"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -101,7 +92,7 @@
         android:layout_marginHorizontal="5dp">
 
         <EditText
-            android:id="@+id/messageBox"
+            android:id="@+id/chat_messageBox"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:hint="Type a message"
@@ -124,7 +115,7 @@
             android:text="Send"
             android:textColor="@color/white"/>-->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/sendButton"
+            android:id="@+id/chat_sendButton"
             android:layout_width="wrap_content"
             android:layout_height="42dp"
             android:src="@drawable/send_icon"
@@ -139,3 +130,4 @@
 
     </LinearLayout>
 </RelativeLayout>
+

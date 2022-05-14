@@ -11,8 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -24,7 +23,8 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>, 
     val ITEM_SENT = 2
 
     private lateinit var myDbRef: DatabaseReference
-    var senderRoom: String? = null
+    private val senderRoom = receiverUid + senderUid
+    private val receiverRoom = senderUid + receiverUid
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == 1){
@@ -38,9 +38,7 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>, 
         }
     }
 
-    @SuppressLint("SimpleDateFormat")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
 
         myDbRef = FirebaseDatabase.getInstance().reference
 
@@ -48,51 +46,62 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>, 
 
         if (holder.javaClass == SentViewHolder::class.java){
 
-            //for sent message view holder
+//##################### sent message view holder #######################################################################
+
             val viewHolder = holder as SentViewHolder
             holder.sentMessage.text = currentMessage.message
 
-//######################### DELETE MESSAGE ################################################################
             holder.sentMessage.setOnLongClickListener{
 
-                var ad = AlertDialog.Builder(context)
-                ad.setTitle("Delete")
-                ad.setMessage("Do you want to delete all chat messages ? $position")
+                deleteMsg(position, senderRoom, currentMessage)
 
-                ad.setPositiveButton("Yes",DialogInterface.OnClickListener { _, _ ->
-
-                    myDbRef.child("chats").child(receiverUid + senderUid).child("messages").child("message")
-                        .removeValue().addOnSuccessListener {
-                                Toast.makeText(context, "Chat Deleted", Toast.LENGTH_SHORT).show()
-                            }.addOnFailureListener {
-                                Toast.makeText(context, "Try Again", Toast.LENGTH_SHORT).show()
-                            }
-
-                })
-                ad.setNegativeButton("No",null)
-                ad.show()
-
-                true
             }
-
-//######################### FETCH DATE ####################################################################
-            val sdf = SimpleDateFormat("dd/MM/yyyy, hh:mm a")  //("dd/MMMM/yyyy hh:mm a")
-            val netDate = Date(currentMessage.timestamp!!)
-            val date =sdf.format(netDate)
-            holder.sent_timestamp.text = date
+            timeStamp(holder.sentTimestamp, currentMessage)
 
         }
         else{
-            //for received message view holder
+//##################### received message view holder ###################################################################
+
             val viewHolder = holder as ReceivedViewHolder
             holder.receivedMessage.text = currentMessage.message
 
-            val sdf = SimpleDateFormat("dd/MM/yyyy hh:mm a")  //("dd/MMMM/yyyy hh:mm a")
-            val netDate = Date(currentMessage.timestamp!!)
-            val date =sdf.format(netDate)
-            holder.received_timestamp.text = date                   //fetch date & time from database
+            holder.receivedMessage.setOnLongClickListener{
+
+                deleteMsg(position, receiverRoom, currentMessage)
+
+            }
+            timeStamp(holder.receivedTimestamp, currentMessage)
         }
 
+    }
+
+    private fun deleteMsg(position: Int, room: String, currentMessage: Message):Boolean {
+        val ad = AlertDialog.Builder(context)
+        ad.setTitle("Delete")
+        ad.setMessage("Delete selected message? $position")
+
+        ad.setPositiveButton("Yes",DialogInterface.OnClickListener { _, _ ->
+
+            myDbRef.child("chats").child(room).child("messages").child(currentMessage.uniqueId!!)
+                .removeValue().addOnSuccessListener {
+                    Toast.makeText(context, "Message Deleted", Toast.LENGTH_SHORT).show()
+                }.addOnFailureListener {
+                    Toast.makeText(context, "Try Again", Toast.LENGTH_SHORT).show()
+                }
+
+        })
+        ad.setNegativeButton("No",null)
+        ad.show()
+
+        return true
+    }
+
+    private fun timeStamp(timeStamp: TextView, currentMessage: Message) {
+        @SuppressLint("SimpleDateFormat")
+        val sdf = SimpleDateFormat("dd/MM/yyyy, hh:mm a")  //("dd/MMMM/yyyy hh:mm a")
+        val netDate = Date(currentMessage.timestamp!!)
+        val date =sdf.format(netDate)
+        timeStamp.text = date
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -110,14 +119,14 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>, 
     }
 
     class SentViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
-        val sentMessage = itemView.findViewById<TextView>(R.id.sent_message)
-        var sent_timestamp = itemView.findViewById<TextView>(R.id.sent_messageTime)
+        val sentMessage: TextView = itemView.findViewById(R.id.sent_message)
+        val sentTimestamp: TextView = itemView.findViewById(R.id.sent_messageTime)
 
 
     }
     class ReceivedViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
-        val receivedMessage = itemView.findViewById<TextView>(R.id.received_message)
-        val received_timestamp = itemView.findViewById<TextView>(R.id.received_messageTime)
+        val receivedMessage: TextView = itemView.findViewById(R.id.received_message)
+        val receivedTimestamp: TextView = itemView.findViewById(R.id.received_messageTime)
 
     }
 }
