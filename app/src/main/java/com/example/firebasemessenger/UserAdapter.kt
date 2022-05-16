@@ -45,10 +45,9 @@ class UserAdapter(val context: Context, private val userList: ArrayList<User>):
         holder.favorite.setOnClickListener {
                 val ad = AlertDialog.Builder(context)
                 ad.setTitle("Add to favorites")
-                ad.setMessage("Click on YES to add user to favorites.")
+                ad.setMessage("Click on YES to add ${currentUser.name} to favorites.")
                 ad.setPositiveButton("Yes", DialogInterface.OnClickListener { _, _ ->
 
-                    holder.favorite.setImageResource(R.drawable.ic_favorite_icon_filled)
                     Toast.makeText(context, "${currentUser.name} added to favorites",Toast.LENGTH_SHORT).show()
 
                     addUserToDatabase(currentUser.name, currentUser.age, currentUser.mobile, currentUser.maritalStatus,

@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.MenuInflater
 import android.view.View
 import android.widget.*
@@ -14,16 +16,16 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
-
 
     private lateinit var auth: FirebaseAuth
     private lateinit var userRecyclerView: RecyclerView
     private lateinit var userList: ArrayList<User>
     private lateinit var adapter: UserAdapter
     private lateinit var mDbRef: DatabaseReference
-    //lateinit var FirebaseRecyclerAdapter : FirebaseRecyclerAdapter<User, UsersViewHolder>
     lateinit var mSearchText: EditText
 
         @SuppressLint("NotifyDataSetChanged")
@@ -46,59 +48,29 @@ class MainActivity : AppCompatActivity() {
             userRecyclerView.layoutManager = LinearLayoutManager(this)
             userRecyclerView.adapter = adapter
 
-            mSearchText = findViewById<EditText?>(R.id.searchText)
+            mSearchText = findViewById(R.id.main_searchText)
 
             val swipeRefresh = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
 
 //################################### search user ###########################################################################
 
-            /*mSearchText.addTextChangedListener(object : TextWatcher{
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-                }
+            mSearchText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
                     val searchText = mSearchText.text.toString()
-                    //loadFirebaseData(searchText)
+                        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
 
-                    mDbRef.child("User").addValueEventListener(object : ValueEventListener {
-                        override fun onDataChange(snapshot: DataSnapshot) {
-
-                            userList.clear()
-
-                            for (postSnapshot in snapshot.children) {
-                                val availableUsers = postSnapshot.getValue(User::class.java)
-
-                                //############## hide current user from list ############################################################
-
-                                if (auth.currentUser?.uid != availableUsers?.uid &&
-                                    loggedGender != availableUsers?.gender &&
-                                    searchText == availableUsers?.name) {
-
-                                        Log.d(searchText,
-                                            "#########################################################")
-
-                                    userList.add(availableUsers!!)
-
-                                    fetch_userStatus.text = ""
-                                }
-                            }
-                            adapter.notifyDataSetChanged()
-                        }
-
-                        override fun onCancelled(error: DatabaseError) {
-                        }
-                    })
-
-
+                    if (searchText.isEmpty()){
+                        getAvailableUsers(loggedGender)
+                    }else{
+                        searchUsers(searchText,loggedGender)
+                    }
                 }
 
-                override fun afterTextChanged(p0: Editable?) {
-
-                }
-
-            })*/
+                override fun afterTextChanged(p0: Editable?) {}
+            })
 
 //################################### Show users in "available users" page ###################################################
 
@@ -146,7 +118,10 @@ class MainActivity : AppCompatActivity() {
 
             main_searchButton.setOnClickListener {
                 searchBarLayout.visibility = View.VISIBLE
-                main_searchButton.setBackgroundResource(R.drawable.ic_cancel_icon)
+            }
+            main_searchCancelButton.setOnClickListener {
+                main_searchText.text = null
+                searchBarLayout.visibility = View.GONE
             }
 
         }
@@ -216,40 +191,37 @@ class MainActivity : AppCompatActivity() {
             popup.show()
         }
 
-//#############################################  ###################################################################
+//############################################# Search View #################################################################
 
-    /*private fun loadFirebaseData(searchText: String) {
+    private fun searchUsers(searchText: String, loggedGender: String) {
+        val searchQuery = mDbRef.child("User").orderByChild("name").startAt(searchText)
+            .endAt(searchText + "uf8ff")
 
-        if (searchText.isEmpty()){
+        searchQuery.addValueEventListener(object : ValueEventListener {
+            @SuppressLint("NotifyDataSetChanged")
+            override fun onDataChange(snapshot: DataSnapshot) {
 
-            FirebaseRecyclerAdapter.cleanup()
-            userRecyclerView.adapter = FirebaseRecyclerAdapter
+                userList.clear()
 
-        }else{
+                for (postSnapshot in snapshot.children) {
+                    val availableUsers = postSnapshot.getValue(User::class.java)
 
-            FirebaseRecyclerAdapter = object : FirebaseRecyclerAdapter<User , UsersViewHolder>(
-                User::class.java,
-                R.layout.user_layout,
-                UsersViewHolder::class.java,
-                mDbRef
-            ){
-                override fun populateViewHolder(viewHolder: UsersViewHolder, userModel: User?, position: Int) {
-                    viewHolder.mView.txt_name.text = userModel?.name
-                    viewHolder.mView.txt_age.text = userModel?.age
-                    viewHolder.mView.txt_gender.text = userModel?.gender
-                    Picasso.get().load(userModel?.profileImageUri).into(viewHolder.mView.chat_imageView)
+//################################### hide current user from list ############################################################
 
+                    if (auth.currentUser?.uid != availableUsers?.uid && loggedGender != availableUsers?.gender) {
+
+                        userList.add(availableUsers!!)
+
+                        fetch_userStatus.text = ""
+                    }
                 }
-
+                adapter.notifyDataSetChanged()
             }
 
-            userRecyclerView.adapter = FirebaseRecyclerAdapter
-        }
+            override fun onCancelled(error: DatabaseError) { }
+        })
+
 
     }
-
-    class UsersViewHolder(var mView : View) : RecyclerView.ViewHolder(mView){
-
-    }*/
 
 }

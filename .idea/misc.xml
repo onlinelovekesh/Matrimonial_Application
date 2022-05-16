@@ -36,6 +36,7 @@
         <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/profile_img.xml" value="0.2703125" />
         <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/received_background.xml" value="0.2" />
         <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/search_icon.xml" value="0.1875" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/searchview_background.xml" value="0.206" />
         <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/send_icon.xml" value="0.2703125" />
         <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/send_icon_foreground.xml" value="0.536" />
         <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/drawable/sent_background.xml" value="0.2703125" />
@@ -57,6 +58,7 @@
         <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/layout/favorite_user_layout.xml" value="0.4" />
         <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/layout/gender_array_list.xml" value="0.25416666666666665" />
         <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/layout/nav_header.xml" value="0.25416666666666665" />
+        <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/layout/notification_layout.xml" value="0.25416666666666665" />
         <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/layout/received_message.xml" value="0.536" />
         <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/layout/sent_message.xml" value="0.6" />
         <entry key="..\:/Android_Studio_Projects/FirebaseMessenger/app/src/main/res/layout/user_layout.xml" value="0.4" />

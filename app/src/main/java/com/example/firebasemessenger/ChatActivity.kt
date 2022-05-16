@@ -23,6 +23,7 @@ class ChatActivity : AppCompatActivity() {
 
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var messageList: ArrayList<Message>
+    private lateinit var keyList: ArrayList<String>
     private lateinit var myDbRef: DatabaseReference
     private lateinit var auth: FirebaseAuth
     private lateinit var storageReference: StorageReference
@@ -63,6 +64,7 @@ class ChatActivity : AppCompatActivity() {
         val messageBox = findViewById<EditText>(R.id.chat_messageBox)
         val sendButton = findViewById<ImageView>(R.id.chat_sendButton)
         messageList = ArrayList()
+        keyList = ArrayList()
         messageAdapter = MessageAdapter(this, messageList, senderUid!!, receiverUid)
 
         chatRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -79,6 +81,7 @@ class ChatActivity : AppCompatActivity() {
                     if (message != null ){
 
                         messageList.add(message)
+                        keyList.add(snapshot.key!!)
 
                     }
                     chatRecyclerView.scrollToPosition(messageAdapter.itemCount -1)
@@ -87,8 +90,14 @@ class ChatActivity : AppCompatActivity() {
 
                 override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) { }
 
+                @SuppressLint("NotifyDataSetChanged")
                 override fun onChildRemoved(snapshot: DataSnapshot) {
                     val messageKey = snapshot.key
+                    val index = keyList.indexOf(messageKey)
+                    messageList.removeAt(index)
+                    keyList.removeAt(index)
+                    messageAdapter.notifyDataSetChanged()
+
                 }
 
                 override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) { }
@@ -127,6 +136,7 @@ class ChatActivity : AppCompatActivity() {
 
             if (messageText != "") {
                 addNewMessageToDatabase(senderRoom, receiverRoom, messageText, senderUid, receiverUid, messageBox)
+
             }
         }
 
@@ -147,7 +157,7 @@ class ChatActivity : AppCompatActivity() {
             startActivity(i)
         }
 
-//########################### delete chat from database ################################################################
+//########################### delete complete chat from database ################################################################
 
         chat_delete.setOnClickListener {
 
@@ -171,19 +181,16 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun addNewMessageToDatabase(senderRoom: String, receiverRoom: String, messageText: String, senderUid: String,
-        receiverUid: String, messageBox: EditText) {
+                                        receiverUid: String, messageBox: EditText) {
 
         val senderMessage = myDbRef.child("chats").child(senderRoom).child("messages").push()
-        val senderMessageObject = Message(senderMessage.key,messageText, senderUid,System.currentTimeMillis())
-
         val receiverMessage = myDbRef.child("chats").child(receiverRoom).child("messages").push()
-        val receiverMessageObject = Message(receiverMessage.key,messageText, receiverUid,System.currentTimeMillis())
+        val senderMessageObject = Message(senderMessage.key, messageText, senderUid,System.currentTimeMillis())
+        val receiverMessageObject = Message(receiverMessage.key, messageText, senderUid,System.currentTimeMillis())
 
-        //myDbRef.child("chats").child(senderRoom).child("messages").push()
         senderMessage.setValue(senderMessageObject).addOnSuccessListener {
             receiverMessage.setValue(receiverMessageObject)
         }
         messageBox.setText("")
     }
 }
-

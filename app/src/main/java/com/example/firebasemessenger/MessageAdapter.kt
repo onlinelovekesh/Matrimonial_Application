@@ -7,6 +7,7 @@ import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
@@ -51,10 +52,8 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>, 
             val viewHolder = holder as SentViewHolder
             holder.sentMessage.text = currentMessage.message
 
-            holder.sentMessage.setOnLongClickListener{
-
-                deleteMsg(position, senderRoom, currentMessage)
-
+            holder.sentMessageLayout.setOnLongClickListener{
+                deleteSingleMsg(position, senderRoom, currentMessage)
             }
             timeStamp(holder.sentTimestamp, currentMessage)
 
@@ -65,30 +64,26 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>, 
             val viewHolder = holder as ReceivedViewHolder
             holder.receivedMessage.text = currentMessage.message
 
-            holder.receivedMessage.setOnLongClickListener{
-
-                deleteMsg(position, receiverRoom, currentMessage)
-
+            holder.receivedMessageLayout.setOnLongClickListener{
+                deleteSingleMsg(position, senderRoom, currentMessage)
             }
             timeStamp(holder.receivedTimestamp, currentMessage)
         }
 
     }
 
-    private fun deleteMsg(position: Int, room: String, currentMessage: Message):Boolean {
+    private fun deleteSingleMsg(position: Int, room: String, currentMessage: Message):Boolean {
         val ad = AlertDialog.Builder(context)
-        ad.setTitle("Delete")
-        ad.setMessage("Delete selected message? $position")
+        ad.setTitle("Delete Message")
+        ad.setMessage("Delete selected message?")
 
         ad.setPositiveButton("Yes",DialogInterface.OnClickListener { _, _ ->
-
             myDbRef.child("chats").child(room).child("messages").child(currentMessage.uniqueId!!)
                 .removeValue().addOnSuccessListener {
                     Toast.makeText(context, "Message Deleted", Toast.LENGTH_SHORT).show()
                 }.addOnFailureListener {
                     Toast.makeText(context, "Try Again", Toast.LENGTH_SHORT).show()
                 }
-
         })
         ad.setNegativeButton("No",null)
         ad.show()
@@ -120,12 +115,14 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>, 
 
     class SentViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
         val sentMessage: TextView = itemView.findViewById(R.id.sent_message)
+        val sentMessageLayout: RelativeLayout = itemView.findViewById(R.id.sent_msgLayout)
         val sentTimestamp: TextView = itemView.findViewById(R.id.sent_messageTime)
 
 
     }
     class ReceivedViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
         val receivedMessage: TextView = itemView.findViewById(R.id.received_message)
+        val receivedMessageLayout: RelativeLayout = itemView.findViewById(R.id.received_msgLayout)
         val receivedTimestamp: TextView = itemView.findViewById(R.id.received_messageTime)
 
     }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -34,7 +35,7 @@ class FavoriteChats : AppCompatActivity() {
         userRecyclerView.layoutManager = LinearLayoutManager(this)
         userRecyclerView.adapter = adapter
 
-        fav_userStatus.text = getString(R.string.wait)
+        fav_userStatus.text = "Add your favorite profiles\nfrom home page"
 
         mDbRef.child("User").child(auth.currentUser!!.uid).child("favorites")
             .addValueEventListener(object: ValueEventListener {
