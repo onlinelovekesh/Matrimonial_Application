@@ -14,14 +14,14 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="10"
-        android:layout_marginHorizontal="5dp">
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginVertical="15dp">
 
         <ImageButton
             android:id="@+id/profile_backButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginTop="15dp"
             android:src="@drawable/back_icon"
             android:background="@android:color/transparent"
             android:contentDescription="Back" />
@@ -32,48 +32,38 @@
             android:text="My Profile"
             android:textColor="@color/white"
             android:textSize="26sp"
-            android:gravity="center"
-            android:layout_marginTop="15dp"/>
+            android:gravity="center"/>
         <ImageButton
             android:id="@+id/profile_logoutButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginTop="15dp"
             android:src="@drawable/logout_icon"
             android:background="@android:color/transparent"
             android:contentDescription="Logout" />
 
     </LinearLayout>
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@drawable/profile_curve"
-        android:layout_marginTop="20dp">
-
         <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
             <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@drawable/profile_curve">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/profile_image"
-                    android:layout_width="115dp"
-                    android:layout_height="115dp"
-                    android:layout_gravity="center"
-                    android:padding="1dp"
-                    android:layout_marginTop="15dp"
-                    app:shapeAppearanceOverlay="@style/curved_corners"
-                    app:strokeWidth="2dp"
-                    android:scaleType="centerCrop"
-                    app:strokeColor="@color/purple_500"/>
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"
+                    android:layout_marginHorizontal="0dp"
+                    android:layout_marginTop="0dp"
+                    android:fitsSystemWindows="true"
+                    android:src="@drawable/ic_profile_pic"
+                    app:shapeAppearanceOverlay="@style/curved_image"
+                    />
 
                 <Button
                     android:id="@+id/profile_selectOrUpdatePhoto"
@@ -88,7 +78,7 @@
                     android:textAllCaps="false"
                     android:clickable="true"
                     android:focusable="true"
-                    android:backgroundTint="#F0E8FB"
+                    android:backgroundTint="#E5D9F6"
                     style="?attr/materialButtonOutlinedStyle"/>
 
                 <TextView
@@ -313,7 +303,11 @@
                     android:backgroundTint="#FF0000"
                     style="?attr/materialButtonOutlinedStyle" />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:background="@color/white"/>
+
             </LinearLayout>
         </ScrollView>
-    </LinearLayout>
 </LinearLayout>

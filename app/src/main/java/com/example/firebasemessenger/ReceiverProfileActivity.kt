@@ -37,10 +37,16 @@ class ReceiverProfileActivity : AppCompatActivity() {
                 if (it.exists()){
                     val name = it.child("name").value.toString()
                     val email = it.child("email").value.toString()
+                    val gender = it.child("gender").value.toString()
+                    val age = it.child("age").value.toString()
+                    val maritalStatus = it.child("maritalStatus").value.toString()
 
-                    receiver_name.text = name
                     receiver_s_name.text = "$name's Profile"
+                    receiver_name.text = name
                     receiver_email.text = email
+                    receiver_gender.text = gender
+                    receiver_age.text = age
+                    receiver_maritalStatus.text = maritalStatus
 
                 }
             }
@@ -54,6 +60,8 @@ class ReceiverProfileActivity : AppCompatActivity() {
         }.addOnFailureListener {
             Toast.makeText(this,"Unable to retrieve image", Toast.LENGTH_SHORT).show()
         }
+
+        recProfile_backButton.setOnClickListener { onBackPressed() }
     }
 
 }

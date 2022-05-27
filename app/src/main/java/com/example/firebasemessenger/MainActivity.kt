@@ -191,7 +191,7 @@ class MainActivity : AppCompatActivity() {
             popup.show()
         }
 
-//############################################# Search View #################################################################
+//############################################# SEARCH USER #################################################################
 
     private fun searchUsers(searchText: String, loggedGender: String) {
         val searchQuery = mDbRef.child("User").orderByChild("name").startAt(searchText)

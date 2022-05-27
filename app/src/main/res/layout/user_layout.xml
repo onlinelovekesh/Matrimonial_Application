@@ -24,6 +24,7 @@
             android:background="@color/white"
             android:padding="1dp"
             android:scaleType="centerCrop"
+            android:src="@drawable/ic_profile_pic"
             app:shapeAppearanceOverlay="@style/curved_corners"
             app:strokeColor="@color/purple_500"
             app:strokeWidth="1dp" />

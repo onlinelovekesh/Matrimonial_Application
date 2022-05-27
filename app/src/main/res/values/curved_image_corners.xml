@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="curved_image" parent="">
+        <item name="cornerSizeTopLeft">45dp</item>
+        <item name="cornerSizeTopRight">45dp</item>
+    </style>
+</resources>

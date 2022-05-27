@@ -2,32 +2,25 @@ package com.example.firebasemessenger
 
 import android.app.Activity
 import android.app.ProgressDialog
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.widget.*
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
+import androidx.core.app.ActivityCompat
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.theartofdev.edmodo.cropper.CropImage
-import kotlinx.android.synthetic.main.activity_registration.*
-import kotlinx.android.synthetic.main.activity_splash.*
 import kotlinx.android.synthetic.main.activity_user_profile.*
+import java.io.ByteArrayOutputStream
 import java.io.File
 
 class UserProfile : AppCompatActivity() {
@@ -35,10 +28,7 @@ class UserProfile : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var mDbRef: DatabaseReference
     private lateinit var storageReference: StorageReference
-
-    private lateinit var imageUri: Uri
-    //private lateinit var cropActivityResultLauncher: ActivityResultLauncher<Any?>
-
+    private var imageUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,27 +75,17 @@ class UserProfile : AppCompatActivity() {
             Toast.makeText(this,"Unable to retrieve image",Toast.LENGTH_SHORT).show()
         }
 
-        /*cropActivityResultLauncher = registerForActivityResult(cropActivity){
-            it?.let {imageUri ->
-                profile_image.setImageURI(imageUri)
-
-            }
-        }*/
-
 //############################# Buttons ##############################################################################
         selectOrUpdate.setOnClickListener {
             if (selectOrUpdate.text == "Update Profile Picture"){
-                //cropActivityResultLauncher.launch(null)
                 startFileChooser()
             }else{
-
                 uploadPhoto()
-
             }
         }
 
         profile_btnDeleteAccount.setOnClickListener {
-            var ad = AlertDialog.Builder(this)
+            val ad = AlertDialog.Builder(this)
             ad.setTitle("Delete Account")
             ad.setMessage("On clicking delete button, all data including chats will be deleted. It can not be recovered later.")
             ad.setPositiveButton("Delete", DialogInterface.OnClickListener { _, _ ->
@@ -120,84 +100,81 @@ class UserProfile : AppCompatActivity() {
 
         profile_backButton.setOnClickListener {
             onBackPressed() // go back to previous page(main activity)
-
         }
 
         profile_logoutButton.setOnClickListener{
-            auth.signOut()
-            val i = Intent(this,LoginActivity::class.java)
-            i.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(i)
+            val ad = AlertDialog.Builder(this)
+            ad.setTitle("Log Out")
+            ad.setMessage("Are you sure you want to Log Out?")
+            ad.setPositiveButton("Yes", DialogInterface.OnClickListener { _, _ ->
+
+                auth.signOut()
+                val i = Intent(this,LoginActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(i)
+
+            })
+            ad.setNegativeButton("No",null)
+            ad.show()
         }
 
     }
 
-    /*private val cropActivity = object : ActivityResultContract<Any?, Uri?>(){
-        override fun createIntent(context: Context, input: Any?): Intent {
-            return CropImage.activity()
-                .setAspectRatio(16,16)
-                .getIntent(this@UserProfile)
+    private fun startFileChooser(){
+        if(CropImage.isExplicitCameraPermissionRequired(this)) {
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.CAMERA), 0)
         }
-
-        override fun parseResult(resultCode: Int, intent: Intent?): Uri? {
-
-            imageUri = intent?.data!!
-
-            return CropImage.getActivityResult(intent)?.uri
+        else {
+            startActivityForResult(CropImage.getPickImageChooserIntent(this), CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE)
         }
-
-    }*/
-
-    private fun startFileChooser() {
-        val i = Intent()
-        i.type = "image/*" + auth.currentUser?.uid
-        i.action = Intent.ACTION_GET_CONTENT
-        startActivityForResult(Intent.createChooser(i, "Choose Picture"), 111)
-
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 111 && resultCode == Activity.RESULT_OK && data != null){
-            imageUri = data.data!!
-            val bitmap = MediaStore.Images.Media.getBitmap(contentResolver,imageUri)
-
-            //cropActivityResultLauncher.launch(null)
-
-            profile_image.setImageBitmap(bitmap)
-
-            profile_selectOrUpdatePhoto.text = "Save New Image"
+        if(requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
+            val imgUri = CropImage.getPickImageResultUri(this, data)
+            CropImage.activity(imgUri)
+                .setRequestedSize(2500, 2500)
+                .start(this)
         }
+        else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            val result = CropImage.getActivityResult(data)
+            if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
+                imageUri = result.uri
+
+                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver,imageUri)
+                profile_image.setImageBitmap(bitmap)
+                profile_selectOrUpdatePhoto.text = "Save New Image"
+            }
+            else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show()
+            }else{
+                val imageBitmap = data?.extras?.get("data") as Bitmap
+                val baos = ByteArrayOutputStream()
+                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                val datar = baos.toByteArray()
+
+                profile_image.setImageBitmap(imageBitmap)
+                //storageRef!!.putBytes(datar)
+            }
+        }
+
     }
 
     private fun uploadPhoto() {
-
         if (imageUri!=null){
             val pd = ProgressDialog(this)
             pd.setTitle("Uploading image")
             pd.show()
 
-            val imageRef = FirebaseStorage.getInstance().reference
-                .child("Users").child(auth.currentUser?.uid!!).child("profileImage")
-            imageRef.putFile(imageUri)
-                .addOnSuccessListener {p0 ->
+            val imageRef = FirebaseStorage.getInstance().reference.child("Users").child(auth.currentUser?.uid!!)
+                .child("profileImage")
+            imageRef.putFile(imageUri!!).addOnSuccessListener {p0 ->
                     pd.dismiss()
 
-                    profile_selectOrUpdatePhoto.text = "Update Profile Picture"
-                    Toast.makeText(this, "Image updated successfully", Toast.LENGTH_LONG).show()
-
-                    //getting path of the image after inserting
-                    /*imageRef.downloadUrl.addOnSuccessListener {
-                        //addUserToDatabase(it.toString())
-                        // save updated user details in database storage also
-                        mDbRef = FirebaseDatabase.getInstance().reference.child("User").child(auth.currentUser?.uid!!)
-                        val userDetails = User(profile_name.text.toString(),gender_menu.text.toString(),age_menu.text.toString(),
-                            marital_status_menu.text.toString(),profile_email.text.toString(),reg_mobile.text.toString(),
-                            auth.currentUser?.uid!!,it.toString())
-                        mDbRef.setValue(userDetails)
-
-                    }*/
-
+                profile_selectOrUpdatePhoto.text = "Update Profile Picture"
+                Toast.makeText(this, "Image updated successfully", Toast.LENGTH_SHORT).show()
                 }
                 .addOnFailureListener{p0 ->
                     pd.dismiss()
@@ -223,18 +200,15 @@ class UserProfile : AppCompatActivity() {
                 //############### delete user from authentication and signOut ################################################
                 auth.currentUser?.delete()
                 auth.signOut()
+                Toast.makeText(this, "User deleted Successfully", Toast.LENGTH_SHORT).show()
 
                 //############### add flags ##################################################################################
                 val i = Intent(this, LoginActivity::class.java)
                 i.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(i)
 
-                Toast.makeText(this, "User deleted Successfully", Toast.LENGTH_SHORT).show()
-
             }.addOnFailureListener {
                 Toast.makeText(this, "Error occurred, Please try again after few minutes", Toast.LENGTH_SHORT).show()
             }
     }
-
-
 }

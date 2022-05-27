@@ -14,11 +14,12 @@ import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Patterns
 import android.widget.*
+import androidx.core.app.ActivityCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.android.synthetic.main.activity_login.*
+import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.activity_registration.*
 import java.util.regex.Pattern
 
@@ -106,14 +107,6 @@ class RegistrationActivity : AppCompatActivity() {
 
         reg_addImage.setOnClickListener {
             startFileChooser()
-
-        /*if (reg_addImage.text == "Upload Photo"){
-                startFileChooser()
-            }else{
-
-                uploadPhoto()
-
-            }*/
         }
 
     }
@@ -138,10 +131,10 @@ class RegistrationActivity : AppCompatActivity() {
         pd.setTitle("Uploading image")
         pd.show()
 
-        val imageRef = FirebaseStorage.getInstance().reference
-            .child("Users").child(auth.currentUser?.uid!!).child("profileImage")
+        val imageRef = FirebaseStorage.getInstance().reference.child("Users")
+            .child(auth.currentUser?.uid!!).child("profileImage")
         imageRef.putFile(imageUri!!)
-            .addOnSuccessListener {p0 ->
+            .addOnSuccessListener {_ ->
                 pd.dismiss()
                 Toast.makeText(this, "Image uploaded successfully", Toast.LENGTH_LONG).show()
 
@@ -149,27 +142,58 @@ class RegistrationActivity : AppCompatActivity() {
                 imageRef.downloadUrl.addOnSuccessListener {
                     addUserToDatabase(it.toString())
                 }
-
             }
-            .addOnFailureListener{p0 ->
+            .addOnFailureListener{
                 pd.dismiss()
                 Toast.makeText(this, "Please try again", Toast.LENGTH_LONG).show()
             }
             .addOnProgressListener {p0 ->
                 val progress = (100.0 * p0.bytesTransferred)/p0.totalByteCount
                 pd.setMessage("uploaded ${progress.toInt()}%")
-
             }
     }
 
-    private fun startFileChooser() {
+    private fun startFileChooser(){
+        if(CropImage.isExplicitCameraPermissionRequired(this)) {
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.CAMERA), 0)
+        }
+        else {
+            startActivityForResult(CropImage.getPickImageChooserIntent(this), CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE)
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
+            val imgUri = CropImage.getPickImageResultUri(this, data)
+            CropImage.activity(imgUri)
+                .setRequestedSize(2500, 2500)
+                .start(this)
+        }
+        else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            val result = CropImage.getActivityResult(data)
+            if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
+                imageUri = result.uri
+
+                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver,imageUri)
+                reg_profileImage.setImageBitmap(bitmap)
+            }
+            else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    /*private fun startFileChooser() {
         val i = Intent()
         i.type = "image/*" + auth.currentUser?.uid
         i.action = Intent.ACTION_GET_CONTENT
         startActivityForResult(Intent.createChooser(i, "Choose Picture"), 111)
 
-    }
+    }*/*/
 
+    /*@Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 111 && resultCode == Activity.RESULT_OK && data != null){
@@ -179,7 +203,7 @@ class RegistrationActivity : AppCompatActivity() {
 
             reg_addImage.text = "Change Image"
         }
-    }
+    }*/
 
     private fun addUserToDatabase(profileImageUri: String) {
         mDbRef = FirebaseDatabase.getInstance().reference.child("User").child(auth.currentUser?.uid!!)
